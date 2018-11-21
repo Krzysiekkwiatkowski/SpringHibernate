@@ -21,10 +21,10 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         LocalEntityManagerFactoryBean emfb = new LocalEntityManagerFactoryBean();
         emfb.setPersistenceUnitName("bookstorePersistenceUnit");
         return emfb; }
+
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager tm = new JpaTransactionManager(emf);
         return tm; }
-
 }
 
