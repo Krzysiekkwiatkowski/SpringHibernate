@@ -25,7 +25,7 @@ public class PublisherController {
     @RequestMapping("/edit")
     @ResponseBody
     public String edit(){
-        Publisher publisher = publisherDao.loadPublisherById(1);
+        Publisher publisher = publisherDao.loadPublisherById(2);
         publisher.setName("PWN");
         publisherDao.editPublisher(publisher);
         return "<h1> Zmieniono wydawcę </h1>";
@@ -34,14 +34,14 @@ public class PublisherController {
     @RequestMapping("/load")
     @ResponseBody
     public String load(){
-        Publisher publisher = publisherDao.loadPublisherById(1);
+        Publisher publisher = publisherDao.loadPublisherById(2);
         return "<h1> " + publisher.getId() + " " + publisher.getName() + " </h1>";
     }
 
     @RequestMapping("/delete")
     @ResponseBody
     public String delete(){
-        Publisher publisher = publisherDao.loadPublisherById(1);
+        Publisher publisher = publisherDao.loadPublisherById(2);
         publisherDao.deletePublisher(publisher);
         return "<h1> Usunięto wydawcę </h1>";
     }
