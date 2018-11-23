@@ -1,6 +1,7 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -9,7 +10,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String author;
+    @ManyToMany
+    private List<Author> authors;
     private double rating;
     @ManyToOne
     private Publisher publisher;
@@ -31,12 +33,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public void setAuthors(List<Author> authors){
+        this.authors = authors;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public List<Author> getAuthors(){
+        return this.authors;
     }
 
     public double getRating() {
