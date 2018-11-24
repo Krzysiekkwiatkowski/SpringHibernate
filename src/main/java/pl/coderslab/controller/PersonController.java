@@ -3,6 +3,8 @@ package pl.coderslab.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.entity.Person;
 import pl.coderslab.entity.PersonDetails;
@@ -70,5 +72,17 @@ public class PersonController {
         entityManager.remove(entityManager.contains(person) ? person : entityManager.merge(person));
         entityManager.remove(entityManager.contains(personDetails) ? personDetails : entityManager.merge(personDetails));
         return "<h1> Usunięto osobę i szczegóły  </h1>";
+    }
+
+    @RequestMapping(value = "/form", method = RequestMethod.GET)
+    public String formShow(){
+        return "form";
+    }
+
+    @RequestMapping(value = "/form", method = RequestMethod.POST)
+    @ResponseBody
+    public void formUse(@RequestParam String login, @RequestParam String password, @RequestParam String email){
+        Person person = new Person(login, password, email);
+        entityManager.persist(person);
     }
 }
