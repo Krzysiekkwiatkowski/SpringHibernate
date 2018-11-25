@@ -2,10 +2,8 @@ package pl.coderslab.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.Person;
 import pl.coderslab.entity.PersonDetails;
 
@@ -75,14 +73,14 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.GET)
-    public String formShow(){
+    public String formShow(Model model){
+        model.addAttribute("person", new Person());
         return "form";
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
     @ResponseBody
-    public void formUse(@RequestParam String login, @RequestParam String password, @RequestParam String email){
-        Person person = new Person(login, password, email);
+    public void formUse(@ModelAttribute Person person){
         entityManager.persist(person);
     }
 }
