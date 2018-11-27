@@ -7,15 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.entity.Author;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RequestMapping("/author")
 @Controller
 public class AuthorController {
-    @PersistenceContext
-    EntityManager entityManager;
 
     @Autowired
     AuthorDao authorDao;
