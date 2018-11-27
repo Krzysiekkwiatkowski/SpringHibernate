@@ -3,7 +3,7 @@ package pl.coderslab.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "people")
+@Table
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,8 +2,8 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
@@ -11,12 +11,17 @@ import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @RequestMapping("/book")
 @Controller
 public class BookController {
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Autowired
     BookDao bookDao;
 
@@ -26,22 +31,17 @@ public class BookController {
     @Autowired
     AuthorDao authorDao;
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addGet(Model model){
+        model.addAttribute("book", new Book());
+        return "bookAdd";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public String add(){
-        Book book = new Book();
-        book.setTitle("Kuchnia XX wieku");
-        List<Author> authors = new ArrayList<>();
-        Author author1 = authorDao.loadAuthorById(1);
-        authors.add(author1);
-        Author author2 = authorDao.loadAuthorById(2);
-        authors.add(author2);
-        book.setAuthors(authors);
-        book.setRating(5.6);
-        book.setPublisher(publisherDao.loadPublisherById(1));
-        book.setDescription("Polskie przepisy");
+    public String addPost(@ModelAttribute Book book){
         bookDao.saveBook(book);
-        return "<h1> Dodano </h1>";
+        return "Added Book";
     }
 
     @RequestMapping("/edit")
@@ -94,5 +94,21 @@ public class BookController {
             System.out.println(book.getId() + " " + book.getTitle() + " " + book.getRating() + " " + book.getDescription());
         }
         return "<h1> Wyświetlono wszystko w konsoli </h1>";
+    }
+
+    @ModelAttribute("publishers")
+    public List<Publisher> getPublishers(){
+        return publisherDao.getPublishers();
+    }
+
+    @ModelAttribute("books")
+    public List<Book> getBooks(){
+        return bookDao.getBooks();
+    }
+
+    @ModelAttribute("authors")
+    public List<Author> getAuthors(){
+        Query query = entityManager.createQuery("SELECT a FROM Author a");
+        return query.getResultList();
     }
 }

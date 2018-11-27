@@ -4,18 +4,29 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "books")
+@Table
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Author> authors;
     private double rating;
     @ManyToOne
     private Publisher publisher;
     private String description;
+
+    public Book() {
+    }
+
+    public Book(String title, List<Author> authors, double rating, Publisher publisher, String description) {
+        this.title = title;
+        this.authors = authors;
+        this.rating = rating;
+        this.publisher = publisher;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -33,12 +44,12 @@ public class Book {
         this.title = title;
     }
 
-    public void setAuthors(List<Author> authors){
-        this.authors = authors;
+    public List<Author> getAuthors() {
+        return authors;
     }
 
-    public List<Author> getAuthors(){
-        return this.authors;
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 
     public double getRating() {

@@ -2,48 +2,66 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.entity.Author;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @RequestMapping("/author")
 @Controller
 public class AuthorController {
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Autowired
     AuthorDao authorDao;
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public String add(){
-        Author author = new Author();
-        author.setFirstName("Krzysiek");
-        author.setLastName("Kwiatkowski");
-        authorDao.saveAuthor(author);
-        return "<h1> Dodano autora </h1>";
+    @GetMapping("/add")
+    public String addGet(Model model){
+        model.addAttribute("author", new Author());
+        return "authorAdd";
     }
 
-    @RequestMapping("/edit")
+    @PostMapping("/add")
     @ResponseBody
-    public String edit(){
-        Author author = authorDao.loadAuthorById(1);
-        author.setFirstName("Kasia");
-        author.setLastName("Mirosławska");
+    public String addPost(@ModelAttribute Author author){
+        authorDao.saveAuthor(author);
+        return "Added author";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editGet(@PathVariable Long id, Model model){
+        Author author = authorDao.loadAuthorById(id);
+        model.addAttribute("author", author);
+        return "authorEdit";
+    }
+
+    @PostMapping("/edit/*")
+    @ResponseBody
+    public String editPost(@ModelAttribute Author author){
         authorDao.editAuthor(author);
         return "<h1> Zmieniono autora </h1>";
     }
 
-    @RequestMapping("/load")
+    @RequestMapping("/all")
     @ResponseBody
-    public String load(){
-        Author author = authorDao.loadAuthorById(1);
-        return "<h1> " + author.getFirstName() + " " + author.getLastName() + " </h1>";
+    public String all(){
+        List<Author> authorList = authorDao.getAuthors();
+        String authors = "";
+        for (Author author : authorList) {
+            authors += author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + "</br>";
+        }
+        return authors;
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping("/delete/{id}")
     @ResponseBody
-    public String delete(){
-        Author author = authorDao.loadAuthorById(1);
+    public String delete(@PathVariable Long id){
+        Author author = authorDao.loadAuthorById(id);
         authorDao.deleteAuthor(author);
         return "<h1> Usunięto autora </h1>";
     }
