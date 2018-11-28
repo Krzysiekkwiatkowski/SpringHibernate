@@ -11,17 +11,13 @@ import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/book")
 @Controller
 public class BookController {
-    @PersistenceContext
-    EntityManager entityManager;
-
     @Autowired
     BookDao bookDao;
 
@@ -31,26 +27,31 @@ public class BookController {
     @Autowired
     AuthorDao authorDao;
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @GetMapping("/add")
     public String addGet(Model model){
+        model.addAttribute("authors", getAuthors());
+        model.addAttribute("publishers", getPublishers());
         model.addAttribute("book", new Book());
         return "bookAdd";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping("/add")
     public String addPost(@ModelAttribute Book book){
         bookDao.saveBook(book);
-        return "Added Book";
+        return "redirect:all";
     }
 
-    @RequestMapping("/edit")
-    @ResponseBody
-    public String edit(){
-        Book book = bookDao.findById(1);
-        book.setDescription("New description");
+    @GetMapping("/edit")
+    public String editGet(@RequestParam("id") Long id, Model model){
+        Book book = bookDao.findById(id);
+        model.addAttribute("book", book);
+        return "bookEdit";
+    }
+
+    @PostMapping("/edit")
+    public String editPost(@ModelAttribute Book book){
         bookDao.update(book);
-        return "<h1> Zmieniono </h1>";
+        return "redirect:all";
     }
 
     @RequestMapping("/load")
@@ -60,30 +61,32 @@ public class BookController {
         return "<h1> Wczytano: " + book.getId() + " " + book.getTitle() + " </h1>";
     }
 
-    @RequestMapping("/delete")
-    @ResponseBody
-    public String delete(){
-        Book book = bookDao.findById(1);
-        bookDao.delete(book);
-        return "<h1> Usunięto </h1>";
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") Long id, HttpServletRequest request, Model model){
+        String confirm = request.getParameter("confirm");
+        System.out.println(id);
+        if(confirm == null){
+            model.addAttribute("id", id);
+            return "confirmDel";
+        } else {
+            if(confirm.equals("yes")){
+                Book book = bookDao.findById(id);
+                bookDao.delete(book);
+                return "redirect:all";
+            }
+            return "redirect:all";
+        }
     }
 
     @RequestMapping("/all")
     @ResponseBody
     public String getAll(){
-        List<Author> authors = authorDao.getAuthors();
-        for (Author author : authors) {
-            System.out.println(author.getFirstName() + " " + author.getLastName());
-        }
-        List<Book> books = bookDao.getBooks();
+        List<Book> books = getBooks();
+        String bookList = "";
         for (Book book : books) {
-            System.out.println(book.getId() + " " + book.getTitle() + " " + book.getRating() + " " + book.getPublisher().getName() + " " + book.getDescription());
+            bookList += book.getId() + " | " + book.getTitle() + " | " + book.getAuthors() + " | " + book.getRating() + " | " + book.getPublisher() + " | " + book.getDescription() + "<a href=\"http://localhost:8080/book/edit?id=" + book.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/book/delete?id=" + book.getId() + "\"> Delete </a>" + "</br>";
         }
-        List<Publisher> publishers = publisherDao.getPublishers();
-        for (Publisher publisher : publishers) {
-            System.out.println(publisher.getId() + " " + publisher.getName());
-        }
-        return "<h1> Wyświetlono wszystko w konsoli </h1>";
+        return bookList;
     }
 
     @RequestMapping("/rating")
@@ -97,18 +100,29 @@ public class BookController {
     }
 
     @ModelAttribute("publishers")
-    public List<Publisher> getPublishers(){
-        return publisherDao.getPublishers();
+    public List<String> getPublishers(){
+        List<String> publishers = new ArrayList<>();
+        for (Publisher publisher : publisherDao.getPublishers()) {
+            publishers.add(publisher.getName());
+        }
+        return publishers;
     }
 
     @ModelAttribute("books")
     public List<Book> getBooks(){
-        return bookDao.getBooks();
+        List<Book> books = new ArrayList<>();
+        for (Book book : bookDao.getBooks()) {
+            books.add(book);
+        }
+        return books;
     }
 
     @ModelAttribute("authors")
-    public List<Author> getAuthors(){
-        Query query = entityManager.createQuery("SELECT a FROM Author a");
-        return query.getResultList();
+    public List<String> getAuthors(){
+        List<String> authors = new ArrayList<>();
+        for (Author author : authorDao.getAuthors()) {
+            authors.add(author.getFirstName() + " " + author.getLastName());
+        }
+        return authors;
     }
 }

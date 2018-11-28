@@ -1,7 +1,6 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table
@@ -10,17 +9,17 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Author> authors;
+//    @ManyToMany(cascade = CascadeType.ALL)
+    private String authors;
     private double rating;
-    @ManyToOne
-    private Publisher publisher;
+//    @ManyToOne
+    private String publisher;
     private String description;
 
     public Book() {
     }
 
-    public Book(String title, List<Author> authors, double rating, Publisher publisher, String description) {
+    public Book(String title, String authors, double rating, String publisher, String description) {
         this.title = title;
         this.authors = authors;
         this.rating = rating;
@@ -44,11 +43,11 @@ public class Book {
         this.title = title;
     }
 
-    public List<Author> getAuthors() {
+    public String getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(String authors) {
         this.authors = authors;
     }
 
@@ -60,11 +59,11 @@ public class Book {
         this.rating = rating;
     }
 
-    public Publisher getPublisher() {
+    public String getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(Publisher publisher) {
+    public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
