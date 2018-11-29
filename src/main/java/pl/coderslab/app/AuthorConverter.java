@@ -11,6 +11,11 @@ public class AuthorConverter implements Converter<Object, Author> {
 
     @Override
     public Author convert(Object source) {
-        return authorDao.loadAuthorById(Long.parseLong((String) source));
+        Author author = (Author) source;
+        if(author.getId() instanceof Number){
+            return authorDao.loadAuthorById(Long.parseLong((String) source));
+        } else {
+            return author;
+        }
     }
 }

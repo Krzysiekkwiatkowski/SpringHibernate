@@ -11,6 +11,11 @@ public class PublisherConverter implements Converter<Object, Publisher> {
 
     @Override
     public Publisher convert(Object source) {
-        return publisherDao.loadPublisherById(Long.parseLong((String) source));
+        Publisher publisher = (Publisher) source;
+        if(publisher.getId() instanceof Number){
+            return publisherDao.loadPublisherById(Long.parseLong((String) source));
+        } else {
+            return publisher;
+        }
     }
 }
