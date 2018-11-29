@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.app.AuthorConverter;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
@@ -83,8 +84,12 @@ public class BookController {
     public String getAll(){
         List<Book> books = getBooks();
         String bookList = "";
+        String authors = "";
         for (Book book : books) {
-            bookList += book.getId() + " | " + book.getTitle() + " | " + book.getAuthors() + " | " + book.getRating() + " | " + book.getPublisher() + " | " + book.getDescription() + "<a href=\"http://localhost:8080/book/edit?id=" + book.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/book/delete?id=" + book.getId() + "\"> Delete </a>" + "</br>";
+            for (Author author : book.getAuthors()) {
+                authors += author.getFirstName() + " " + author.getLastName() + " | ";
+            }
+            bookList += book.getId() + " | " + book.getTitle() + " | " + authors + book.getRating() + " | " + book.getPublisher().getName() + " | " + book.getDescription() + "<a href=\"http://localhost:8080/book/edit?id=" + book.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/book/delete?id=" + book.getId() + "\"> Delete </a>" + "</br>";
         }
         return bookList;
     }
@@ -100,10 +105,10 @@ public class BookController {
     }
 
     @ModelAttribute("publishers")
-    public List<String> getPublishers(){
-        List<String> publishers = new ArrayList<>();
+    public List<Publisher> getPublishers(){
+        List<Publisher> publishers = new ArrayList<>();
         for (Publisher publisher : publisherDao.getPublishers()) {
-            publishers.add(publisher.getName());
+            publishers.add(publisher);
         }
         return publishers;
     }
@@ -118,10 +123,10 @@ public class BookController {
     }
 
     @ModelAttribute("authors")
-    public List<String> getAuthors(){
-        List<String> authors = new ArrayList<>();
+    public List<Author> getAuthors(){
+        List<Author> authors = new ArrayList<>();
         for (Author author : authorDao.getAuthors()) {
-            authors.add(author.getFirstName() + " " + author.getLastName());
+            authors.add(author);
         }
         return authors;
     }
