@@ -3,17 +3,25 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.PublisherDao;
+import pl.coderslab.entity.Person;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.entity.PublisherError;
 
+import javax.validation.ConstraintViolation;
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/publisher")
 @Controller
 public class PublisherController {
     @Autowired
     PublisherDao publisherDao;
+
+    @Autowired
+    Validator validator;
 
     @GetMapping("/add")
     public String addGet(Model model){
@@ -24,7 +32,14 @@ public class PublisherController {
     @PostMapping("/add")
     @ResponseBody
     public String addPost(@ModelAttribute Publisher publisher){
-        publisherDao.savePublisher(publisher);
+//        Set<ConstraintViolation<Publisher>> violations = validator.validate(publisher, new PublisherError());
+//        if(!violations.isEmpty()){
+//            for (ConstraintViolation<Publisher> constraintViolation : violations) {
+//                System.out.println(constraintViolation.getPropertyPath() + " " + constraintViolation.getMessage());
+//            }
+//        } else {
+            publisherDao.savePublisher(publisher);
+//        }
         List<Publisher> publisherList = publisherDao.getPublishers();
         String publishers = "<a href=\"http://localhost:8080/publisher/add\"> Add </a> | <a href=\"http://localhost:8080/publisher/all\"> All </a></br>";
         for (Publisher pub : publisherList) {
