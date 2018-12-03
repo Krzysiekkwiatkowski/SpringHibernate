@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.entity.Author;
 
+import java.util.List;
+
 @RequestMapping("/author")
 @Controller
 public class AuthorController {
@@ -46,5 +48,16 @@ public class AuthorController {
     public String delete(@PathVariable("id") Long id){
         authorDao.deleteAuthor(id);
         return "usunięto autora";
+    }
+
+    @RequestMapping("/all")
+    @ResponseBody
+    public String all(){
+        List<Author> authors = authorDao.getAuthors();
+        String result = "";
+        for (Author author : authors) {
+            result += author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + "</br>";
+        }
+        return result;
     }
 }

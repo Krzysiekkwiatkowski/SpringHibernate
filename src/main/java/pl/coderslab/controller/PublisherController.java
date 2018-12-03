@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Publisher;
 
+import java.util.List;
+
 @RequestMapping("/publisher")
 @Controller
 public class PublisherController {
@@ -44,5 +46,16 @@ public class PublisherController {
     public String delete(@PathVariable("id") Long id){
         publisherDao.deletePublisher(id);
         return "usunięto wydawcę";
+    }
+
+    @RequestMapping("/all")
+    @ResponseBody
+    public String all(){
+        List<Publisher> publishers = publisherDao.getPublishers();
+        String result = "";
+        for (Publisher publisher : publishers) {
+            result += publisher.getId() + " | " + publisher.getName() + "</br>";
+        }
+        return result;
     }
 }

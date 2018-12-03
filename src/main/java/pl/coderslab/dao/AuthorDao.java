@@ -6,6 +6,9 @@ import pl.coderslab.entity.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Transactional
@@ -28,5 +31,10 @@ public class AuthorDao {
     public void deleteAuthor(Long id){
         Author author = entityManager.find(Author.class, id);
         entityManager.remove(entityManager.contains(author) ? author : entityManager.merge(author));
+    }
+
+    public List<Author> getAuthors(){
+        Query query = entityManager.createQuery("SELECT a FROM Author a");
+        return query.getResultList();
     }
 }

@@ -34,7 +34,7 @@ public class BookController {
         authors.add(authorDao.loadAuthor(2L));
         book.setTitle("tytuł");
         book.setAuthors(authors);
-        book.setRating(2.2);
+        book.setRating(4.2);
         book.setPublisher(publisherDao.loadPublisher(2L));
         book.setDescription("opis");
         bookDao.saveBook(book);
@@ -65,5 +65,37 @@ public class BookController {
     public String delete(@PathVariable("id") Long id){
         bookDao.deleteBook(id);
         return "usunieto książkę";
+    }
+
+    @RequestMapping("/all")
+    @ResponseBody
+    public String all(){
+        List<Book> books = bookDao.getBooks();
+        String result = "";
+        for (Book book : books) {
+            result += book.getId() + " | " + book.getTitle() + " | ";
+            List<Author> authors = book.getAuthors();
+            for (Author author : authors) {
+                result += author.getFirstName() + " " + author.getLastName() + " | ";
+            }
+            result += book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "</br>";
+        }
+        return result;
+    }
+
+    @RequestMapping("/rating/{rating}")
+    @ResponseBody
+    public String all(@PathVariable("rating") double rating){
+        List<Book> books = bookDao.getRatingList(rating);
+        String result = "";
+        for (Book book : books) {
+            result += book.getId() + " | " + book.getTitle() + " | ";
+            List<Author> authors = book.getAuthors();
+            for (Author author : authors) {
+                result += author.getFirstName() + " " + author.getLastName() + " | ";
+            }
+            result += book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "</br>";
+        }
+        return result;
     }
 }
