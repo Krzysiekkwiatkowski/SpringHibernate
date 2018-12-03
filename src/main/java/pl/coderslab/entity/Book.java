@@ -1,6 +1,8 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -9,9 +11,12 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String author;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<Author> authors = new ArrayList<>();
     private double rating;
-    private String publisher;
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
     private String description;
 
     public Book() {
@@ -33,12 +38,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public List<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
     }
 
     public double getRating() {
@@ -49,11 +54,11 @@ public class Book {
         this.rating = rating;
     }
 
-    public String getPublisher() {
+    public Publisher getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(String publisher) {
+    public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
     }
 

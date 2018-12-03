@@ -5,22 +5,37 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
+import pl.coderslab.dao.PublisherDao;
+import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class BookController {
     @Autowired
     BookDao bookDao;
 
+    @Autowired
+    PublisherDao publisherDao;
+
+    @Autowired
+    AuthorDao authorDao;
+
     @RequestMapping("/add")
     @ResponseBody
     public String add(){
         Book book = new Book();
+        List<Author> authors = new ArrayList<>();
+        authors.add(authorDao.loadAuthor(1L));
+        authors.add(authorDao.loadAuthor(2L));
         book.setTitle("tytuł");
-        book.setAuthor("autor");
+        book.setAuthors(authors);
         book.setRating(2.2);
-        book.setPublisher("OWP");
+        book.setPublisher(publisherDao.loadPublisher(2L));
         book.setDescription("opis");
         bookDao.saveBook(book);
         return "dodano książkę" + book.getId() + " " + book.getTitle();
@@ -38,7 +53,9 @@ public class BookController {
     public String edit(@PathVariable("id") Long id){
         Book book = bookDao.loadBookById(id);
         book.setTitle("zmieniono tytuł");
-        book.setAuthor("zmieniono autora");
+        List<Author> authors = new ArrayList<>();
+        authors.add(authorDao.loadAuthor(1L));
+        book.setAuthors(authors);
         bookDao.updateBook(book);
         return "zmieniono książkę" + book.getId() + " " + book.getTitle();
     }
