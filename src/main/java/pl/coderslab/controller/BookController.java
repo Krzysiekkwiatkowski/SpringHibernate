@@ -2,18 +2,20 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
+import pl.coderslab.entity.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequestMapping("/book")
 @Controller
 public class BookController {
     @Autowired
@@ -25,20 +27,26 @@ public class BookController {
     @Autowired
     AuthorDao authorDao;
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addGet(Model model){
+        model.addAttribute("book", new Book());
+        return "addBook";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public String add(){
-        Book book = new Book();
-        List<Author> authors = new ArrayList<>();
-        authors.add(authorDao.loadAuthor(1L));
-        authors.add(authorDao.loadAuthor(2L));
-        book.setTitle("tytuł");
-        book.setAuthors(authors);
-        book.setRating(4.2);
-        book.setPublisher(publisherDao.loadPublisher(2L));
-        book.setDescription("opis");
-        bookDao.saveBook(book);
-        return "dodano książkę" + book.getId() + " " + book.getTitle();
+    public String add(@ModelAttribute Book book, BindingResult bindingResult){
+        book.setPublisher(publisherDao.loadPublisher(book.getPublisher().getId()));
+        List<Author> choosedAuthors = new ArrayList<>();
+        for (Author author : book.getAuthors()) {
+            choosedAuthors.add(authorDao.loadAuthor(author.getId()));
+        }
+        book.setAuthors(choosedAuthors);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Author author : book.getAuthors()) {
+            stringBuilder.append(" | " + author.getFirstName() + " " + author.getLastName());
+        }
+        return "dodano książkę" + book.getAuthors().size();
     }
 
     @RequestMapping("/load/{id}")
@@ -97,5 +105,15 @@ public class BookController {
             result += book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "</br>";
         }
         return result;
+    }
+
+    @ModelAttribute("authors")
+    public List<Author> getAuthors(){
+        return authorDao.getAuthors();
+    }
+
+    @ModelAttribute("publishers")
+    public List<Publisher> getPublishers(){
+        return publisherDao.getPublishers();
     }
 }
