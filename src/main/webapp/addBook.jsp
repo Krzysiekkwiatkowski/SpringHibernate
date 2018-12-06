@@ -18,7 +18,7 @@
     Rating: <form:input path="rating" type="number" min="0.0" step="0.1" max="10.0" /></br>
     Publisher: <form:select path="publisher.id" items="${publishers}" itemLabel="name" itemValue="id"/></br>
     Description: <form:input path="description" /></br>
-    <input type="submit" value="Add book">
+    <button type="submit">Add book</button>
 </form:form>
 </body>
 </html>

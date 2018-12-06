@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 public class Article {
@@ -15,7 +14,7 @@ public class Article {
     private String title;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private Author author;
+    private Creator author;
     @ManyToOne
     private Category category;
     private String content;
@@ -44,11 +43,11 @@ public class Article {
         this.updated = Date.valueOf(LocalDate.now());
     }
 
-    public Author getAuthor() {
+    public Creator getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setAuthor(Creator author) {
         this.author = author;
         this.updated = Date.valueOf(LocalDate.now());
     }

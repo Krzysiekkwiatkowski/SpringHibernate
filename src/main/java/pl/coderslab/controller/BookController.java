@@ -3,7 +3,6 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
@@ -35,18 +34,14 @@ public class BookController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public String add(@ModelAttribute Book book, BindingResult bindingResult){
+    public String add(@ModelAttribute Book book) {
         book.setPublisher(publisherDao.loadPublisher(book.getPublisher().getId()));
         List<Author> choosedAuthors = new ArrayList<>();
         for (Author author : book.getAuthors()) {
             choosedAuthors.add(authorDao.loadAuthor(author.getId()));
         }
         book.setAuthors(choosedAuthors);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Author author : book.getAuthors()) {
-            stringBuilder.append(" | " + author.getFirstName() + " " + author.getLastName());
-        }
-        return "dodano książkę" + book.getAuthors().size();
+        return "dodano książkę" + book.getId() + " | " + book.getTitle() + " | " + book.getPublisher().getName() + " | " + book.getDescription();
     }
 
     @RequestMapping("/load/{id}")

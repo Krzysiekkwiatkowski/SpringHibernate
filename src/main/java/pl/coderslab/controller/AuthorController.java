@@ -2,11 +2,11 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.entity.Author;
+
 
 import java.util.List;
 
@@ -16,14 +16,16 @@ public class AuthorController {
     @Autowired
     private AuthorDao authorDao;
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public String add(){
-        Author author = new Author();
-        author.setFirstName("Kazik");
-        author.setLastName("Kazimierski");
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addGet(Model model){
+        model.addAttribute("author", new Author());
+        return "addAuthor";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addPost(@ModelAttribute Author author){
         authorDao.saveAuthor(author);
-        return "dodano autora" + author.getId() + " " + author.getFirstName();
+        return "redirect:all";
     }
 
     @RequestMapping("/load/{id}")
@@ -33,31 +35,34 @@ public class AuthorController {
         return "wczytano autora" + author.getId() + " " + author.getFirstName();
     }
 
-    @RequestMapping("/edit/{id}")
-    @ResponseBody
-    public String edit(@PathVariable("id") Long id){
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String editGet(@PathVariable("id") Long id, Model model){
         Author author = authorDao.loadAuthor(id);
-        author.setFirstName("Marek");
-        author.setLastName("Marecki");
+        model.addAttribute("author", author);
+        return "editAuthor";
+    }
+
+    @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
+    public String editPost(@ModelAttribute Author author){
         authorDao.editAuthor(author);
-        return "zmieniono autora" + author.getId() + " " + author.getFirstName();
+        return "redirect:/author/all";
     }
 
     @RequestMapping("/delete/{id}")
-    @ResponseBody
     public String delete(@PathVariable("id") Long id){
         authorDao.deleteAuthor(id);
-        return "usunięto autora";
+        return "redirect:/author/all";
     }
 
     @RequestMapping("/all")
     @ResponseBody
     public String all(){
         List<Author> authors = authorDao.getAuthors();
-        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
         for (Author author : authors) {
-            result += author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + "</br>";
+            stringBuilder.append(author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + "<a href=\"http://localhost:8080/author/edit/" + author.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/author/delete/" + author.getId() + "\" > Delete </a>" + "</br>");
         }
-        return result;
+        return stringBuilder.toString();
     }
 }

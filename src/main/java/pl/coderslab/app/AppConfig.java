@@ -18,7 +18,9 @@ import javax.persistence.EntityManagerFactory;
 @EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter {
     @Bean
-    public ViewResolver viewResolver() {
+    public ViewResolver viewResolver(
+
+    ) {
         InternalResourceViewResolver viewResolver =
                 new InternalResourceViewResolver();
         viewResolver.setPrefix("/");
@@ -34,13 +36,4 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager tm = new JpaTransactionManager(emf);
         return tm; }
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(getAuthorConverter());
-    }
-    @Bean
-    public AuthorConverter getAuthorConverter() {
-        return new AuthorConverter();
-    }
 }
