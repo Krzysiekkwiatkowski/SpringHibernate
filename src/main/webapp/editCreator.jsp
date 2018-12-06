@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: oem
-  Date: 05.12.18
-  Time: 22:50
+  Date: 06.12.18
+  Time: 20:00
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -12,10 +12,11 @@
     <title>Title</title>
 </head>
 <body>
-<form:form method="post" modelAttribute="author">
+<form:form method="post" modelAttribute="creator">
+    <form:hidden path="id" />
     Firstname: <form:input path="firstName" /></br>
     Lastname: <form:input path="lastName" /></br>
-    <input type="submit" value="Add author">
+    <input type="submit" value="Add creator">
 </form:form>
 </body>
 </html>

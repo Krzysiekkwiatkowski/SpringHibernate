@@ -16,7 +16,7 @@ public class Category {
     private String name;
     @Nullable
     private String description;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private List<Article> articles = new ArrayList<>();
 
     public Category() {

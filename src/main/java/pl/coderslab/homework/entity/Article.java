@@ -13,8 +13,8 @@ public class Article {
     @Max(200)
     private String title;
     @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Creator author;
+    @JoinColumn(name = "creator_id")
+    private Creator creator;
     @ManyToOne
     private Category category;
     private String content;
@@ -43,12 +43,12 @@ public class Article {
         this.updated = Date.valueOf(LocalDate.now());
     }
 
-    public Creator getAuthor() {
-        return author;
+    public Creator getCreator() {
+        return creator;
     }
 
-    public void setAuthor(Creator author) {
-        this.author = author;
+    public void setCreator(Creator creator) {
+        this.creator = creator;
         this.updated = Date.valueOf(LocalDate.now());
     }
 

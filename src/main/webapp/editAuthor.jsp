@@ -16,7 +16,7 @@
     <form:hidden path="id" />
     Firstname: <form:input path="firstName" /></br>
     Lastname: <form:input path="lastName" /></br>
-    <input type="submit" value="Add author">
+    <input type="submit" value="Edit author">
 </form:form>
 </body>
 </html>

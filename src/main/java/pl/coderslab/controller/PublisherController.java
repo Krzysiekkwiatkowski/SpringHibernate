@@ -2,9 +2,8 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Publisher;
 
@@ -16,13 +15,16 @@ public class PublisherController {
     @Autowired
     private PublisherDao publisherDao;
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public String add(){
-        Publisher publisher = new Publisher();
-        publisher.setName("OWP");
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addGet(Model model){
+        model.addAttribute("publisher", new Publisher());
+        return "addPublisher";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addPost(@ModelAttribute Publisher publisher){
         publisherDao.savePublisher(publisher);
-        return "dodano wydawcę" + publisher.getId() + " " + publisher.getName();
+        return "redirect:all";
     }
 
     @RequestMapping("/load/{id}")
@@ -32,30 +34,34 @@ public class PublisherController {
         return "wczytano wydawcę" + publisher.getId() + " " + publisher.getName();
     }
 
-    @RequestMapping("/edit/{id}")
-    @ResponseBody
-    public String edit(@PathVariable("id") Long id){
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String editGet(@PathVariable("id") Long id, Model model){
         Publisher publisher = publisherDao.loadPublisher(id);
-        publisher.setName("GDW");
+        model.addAttribute("publisher", publisher);
+        return "editPublisher";
+    }
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+    public String editPost(@ModelAttribute Publisher publisher){
         publisherDao.editPublisher(publisher);
-        return "zmieniono wydawcę" + publisher.getId() + " " + publisher.getName();
+        return "redirect:/publisher/all";
     }
 
     @RequestMapping("/delete/{id}")
-    @ResponseBody
     public String delete(@PathVariable("id") Long id){
         publisherDao.deletePublisher(id);
-        return "usunięto wydawcę";
+        return "redirect:/publisher/all";
     }
 
     @RequestMapping("/all")
     @ResponseBody
     public String all(){
         List<Publisher> publishers = publisherDao.getPublishers();
-        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/publisher/add\" > Add </a> | <a href=\"http://localhost:8080/publisher/all\" > All </a></br>\n");
         for (Publisher publisher : publishers) {
-            result += publisher.getId() + " | " + publisher.getName() + "</br>";
+            stringBuilder.append(publisher.getId() + " | " + publisher.getName() + "<a href=\"http://localhost:8080/publisher/edit/" + publisher.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/publisher/delete/" + publisher.getId() + "\" > Delete </a>\n</br>");
         }
-        return result;
+        return stringBuilder.toString();
     }
 }
