@@ -1,7 +1,6 @@
 package pl.coderslab.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,16 +10,14 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Author> authors = new ArrayList<>();
+
+    @ManyToMany
+    private List<Author> authors;
     private double rating;
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
     private String description;
-
-    public Book() {
-    }
 
     public Long getId() {
         return id;

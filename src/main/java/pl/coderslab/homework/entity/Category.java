@@ -4,6 +4,7 @@ import com.sun.istack.internal.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Max(100)
+    @Size(max = 100)
     private String name;
     @Nullable
     private String description;

@@ -3,6 +3,8 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
@@ -11,6 +13,7 @@ import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,33 +30,43 @@ public class BookController {
     AuthorDao authorDao;
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addGet(Model model){
+    public String addGet(Model model) {
         model.addAttribute("book", new Book());
         return "addBook";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public String add(@ModelAttribute Book book) {
-        book.setPublisher(publisherDao.loadPublisher(book.getPublisher().getId()));
+    public String add(@Valid @ModelAttribute Book book, BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<ObjectError> allErrors = result.getAllErrors();
+            for (ObjectError allError : allErrors) {
+                System.out.println(allError.toString());
+            }
+            return "addBook";
+        }
+
+//        book.setPublisher(publisherDao.loadPublisher(book.getPublisher().getId()));
 //        List<Author> choosedAuthors = new ArrayList<>();
 //        for (Author author : book.getAuthors()) {
 //            choosedAuthors.add(authorDao.loadAuthor(author.getId()));
 //        }
 //        book.setAuthors(choosedAuthors);
-        return "dodano książkę" + book.getId() + " | " + book.getTitle() + " | " + book.getPublisher().getName() + " | " + book.getDescription();
+        bookDao.saveBook(book);
+        return "dodano książkę";
     }
 
     @RequestMapping("/load/{id}")
     @ResponseBody
-    public String load(@PathVariable("id") Long id){
+    public String load(@PathVariable("id") Long id) {
         Book book = bookDao.loadBookById(id);
         return "wczytano książkę" + book.getId() + " " + book.getTitle();
     }
 
     @RequestMapping("/edit/{id}")
     @ResponseBody
-    public String edit(@PathVariable("id") Long id){
+    public String edit(@PathVariable("id") Long id) {
         Book book = bookDao.loadBookById(id);
         book.setTitle("zmieniono tytuł");
         List<Author> authors = new ArrayList<>();
@@ -65,14 +78,14 @@ public class BookController {
 
     @RequestMapping("/delete/{id}")
     @ResponseBody
-    public String delete(@PathVariable("id") Long id){
+    public String delete(@PathVariable("id") Long id) {
         bookDao.deleteBook(id);
         return "usunieto książkę";
     }
 
     @RequestMapping("/all")
     @ResponseBody
-    public String all(){
+    public String all() {
         List<Book> books = bookDao.getBooks();
         String result = "";
         for (Book book : books) {
@@ -88,7 +101,7 @@ public class BookController {
 
     @RequestMapping("/rating/{rating}")
     @ResponseBody
-    public String all(@PathVariable("rating") double rating){
+    public String all(@PathVariable("rating") double rating) {
         List<Book> books = bookDao.getRatingList(rating);
         String result = "";
         for (Book book : books) {
@@ -102,13 +115,13 @@ public class BookController {
         return result;
     }
 
-    @ModelAttribute("authors")
-    public List<Author> getAuthors(){
+    @ModelAttribute("allAuthors")
+    public List<Author> getAuthors() {
         return authorDao.getAuthors();
     }
 
     @ModelAttribute("publishers")
-    public List<Publisher> getPublishers(){
+    public List<Publisher> getPublishers() {
         return publisherDao.getPublishers();
     }
 }

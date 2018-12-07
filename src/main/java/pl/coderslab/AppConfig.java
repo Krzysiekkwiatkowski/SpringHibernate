@@ -1,4 +1,4 @@
-package pl.coderslab.app;
+package pl.coderslab;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,12 +8,15 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import pl.coderslab.converters.AuthorConverter;
 
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
+@EnableWebMvc
 @ComponentScan(basePackages = "pl.coderslab")
 @EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter {
@@ -25,15 +28,28 @@ public class AppConfig extends WebMvcConfigurerAdapter {
                 new InternalResourceViewResolver();
         viewResolver.setPrefix("/");
         viewResolver.setSuffix(".jsp");
-        return viewResolver; }
+        return viewResolver;
+    }
 
     @Bean
     public LocalEntityManagerFactoryBean entityManagerFactory() {
         LocalEntityManagerFactoryBean emfb = new LocalEntityManagerFactoryBean();
         emfb.setPersistenceUnitName("bookstorePersistenceUnit");
-        return emfb; }
+        return emfb;
+    }
+
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager tm = new JpaTransactionManager(emf);
-        return tm; }
+        return tm;
+    }
+
+    @Bean
+    public AuthorConverter getAuthorConverter() {
+        return new AuthorConverter();
+    }
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(getAuthorConverter());
+    }
 }

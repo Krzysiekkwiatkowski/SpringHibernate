@@ -1,4 +1,4 @@
-package pl.coderslab.app;
+package pl.coderslab;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

@@ -14,7 +14,7 @@
 <body>
 <form:form method="post" modelAttribute="book">
     Title: <form:input path="title" /></br>
-    Authors: <form:select path="authors" items="${authors}" itemLabel="lastName" itemValue="id" multiple="true"/></br>
+    Authors:<form:select itemValue="id" itemLabel="lastName" path="authors" items="${allAuthors}" /></br>
     Rating: <form:input path="rating" type="number" min="0.0" step="0.1" max="10.0" /></br>
     Publisher: <form:select path="publisher.id" items="${publishers}" itemLabel="name" itemValue="id"/></br>
     Description: <form:input path="description" /></br>

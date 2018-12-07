@@ -18,7 +18,7 @@
     Creator: <form:select path="creator.id" items="${creators}" itemLabel="lastName" itemValue="id" /></br>
     Category: <form:select path="category.id" items="${categories}" itemLabel="name" itemValue="id" /></br>
     Content: <form:input path="content" /></br>
-    <input type="submit" value="Add article">
+    <input type="submit" value="Edit article">
 </form:form>
 </body>
 </html>
