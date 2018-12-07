@@ -2,6 +2,7 @@ package pl.coderslab.homework.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.time.LocalDate;
 
@@ -10,7 +11,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Max(200)
+    @Size(max = 200)
     private String title;
     @ManyToOne
     @JoinColumn(name = "creator_id")

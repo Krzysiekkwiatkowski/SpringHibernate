@@ -46,13 +46,6 @@ public class BookController {
             }
             return "addBook";
         }
-
-//        book.setPublisher(publisherDao.loadPublisher(book.getPublisher().getId()));
-//        List<Author> choosedAuthors = new ArrayList<>();
-//        for (Author author : book.getAuthors()) {
-//            choosedAuthors.add(authorDao.loadAuthor(author.getId()));
-//        }
-//        book.setAuthors(choosedAuthors);
         bookDao.saveBook(book);
         return "dodano książkę";
     }
