@@ -1,10 +1,10 @@
 package pl.coderslab.homework.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Article {
@@ -16,8 +16,8 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private Creator creator;
-    @ManyToOne
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Category> categories;
     private String content;
     private Date created;
     private Date updated;
@@ -53,12 +53,12 @@ public class Article {
         this.updated = Date.valueOf(LocalDate.now());
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public String getContent() {

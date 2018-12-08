@@ -3,7 +3,6 @@ package pl.coderslab.homework.entity;
 import com.sun.istack.internal.Nullable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class Category {
     private String name;
     @Nullable
     private String description;
-    @OneToMany(mappedBy = "category")
+    @ManyToMany(mappedBy = "categories")
     private List<Article> articles = new ArrayList<>();
 
     public Category() {

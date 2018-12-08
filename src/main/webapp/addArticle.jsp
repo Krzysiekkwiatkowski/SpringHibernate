@@ -15,7 +15,7 @@
 <form:form method="post" modelAttribute="article">
     Title: <form:input path="title" /></br>
     Creator: <form:select path="creator.id" items="${creators}" itemLabel="lastName" itemValue="id" /></br>
-    Category: <form:select path="category.id" items="${categories}" itemLabel="name" itemValue="id" /></br>
+    Categories: <form:select path="categories" items="${categoryList}" itemLabel="name" itemValue="id" /></br>
     Content: <form:input path="content" /></br>
     <input type="submit" value="Add article">
 </form:form>

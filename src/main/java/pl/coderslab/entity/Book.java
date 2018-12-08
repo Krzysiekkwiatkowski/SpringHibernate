@@ -10,7 +10,6 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-
     @ManyToMany
     private List<Author> authors;
     private double rating;

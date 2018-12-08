@@ -29,7 +29,6 @@ public class ArticleController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addPost(@ModelAttribute Article article){
         article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
-        article.setCategory(entityManager.find(Category.class, article.getCategory().getId()));
         entityManager.persist(article);
         return "redirect:all";
     }
@@ -43,7 +42,6 @@ public class ArticleController {
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
     public String editPost(@ModelAttribute Article article){
         article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
-        article.setCategory(entityManager.find(Category.class, article.getCategory().getId()));
         entityManager.merge(article);
         return "redirect:/article/all";
     }
@@ -61,7 +59,11 @@ public class ArticleController {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<a href=\"http://localhost:8080/article/add\"> Add </a> | <a href=\"http://localhost:8080/article/all\" > All </a></br>");
         for (Article article : getAllArticles()) {
-            stringBuilder.append(article.getId() + " | " + article.getTitle() + " | " + article.getCreator().getFirstName() + " " + article.getCreator().getLastName() + " | " + article.getCategory().getName() + " | " + article.getContent() + " | " + article.getCreated() + " | " + article.getUpdated() + "<a href=\"http://localhost:8080/article/edit/" + article.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/article/delete/" + article.getId() + "\" > Delete </a></br>");
+            String categories = "";
+            for (Category category : article.getCategories()) {
+                categories += category.getName() + " ";
+            }
+            stringBuilder.append(article.getId() + " | " + article.getTitle() + " | " + article.getCreator().getFirstName() + " " + article.getCreator().getLastName() + " | " + categories + " | " + article.getContent() + " | " + article.getCreated() + " | " + article.getUpdated() + "<a href=\"http://localhost:8080/article/edit/" + article.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/article/delete/" + article.getId() + "\" > Delete </a></br>");
         }
         return stringBuilder.toString();
     }
@@ -78,7 +80,7 @@ public class ArticleController {
         return query.getResultList();
     }
 
-    @ModelAttribute("categories")
+    @ModelAttribute("categoryList")
     public List<Category> getAllCategories(){
         Query query = entityManager.createQuery("SELECT c FROM Category c");
         return query.getResultList();
