@@ -13,6 +13,7 @@ import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,7 @@ public class BookController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
     public String add(@Valid @ModelAttribute Book book, BindingResult result) {
-
         if (result.hasErrors()) {
             List<ObjectError> allErrors = result.getAllErrors();
             for (ObjectError allError : allErrors) {
@@ -47,7 +46,7 @@ public class BookController {
             return "addBook";
         }
         bookDao.saveBook(book);
-        return "dodano książkę";
+        return "redirect:all";
     }
 
     @RequestMapping("/load/{id}")
@@ -57,39 +56,52 @@ public class BookController {
         return "wczytano książkę" + book.getId() + " " + book.getTitle();
     }
 
-    @RequestMapping("/edit/{id}")
-    @ResponseBody
-    public String edit(@PathVariable("id") Long id) {
-        Book book = bookDao.loadBookById(id);
-        book.setTitle("zmieniono tytuł");
-        List<Author> authors = new ArrayList<>();
-        authors.add(authorDao.loadAuthor(1L));
-        book.setAuthors(authors);
-        bookDao.updateBook(book);
-        return "zmieniono książkę" + book.getId() + " " + book.getTitle();
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String editGet(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("book", bookDao.loadBookById(id));
+        return "editBook";
     }
 
-    @RequestMapping("/delete/{id}")
-    @ResponseBody
-    public String delete(@PathVariable("id") Long id) {
-        bookDao.deleteBook(id);
-        return "usunieto książkę";
+    @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
+    public String editPost(@ModelAttribute Book book, Model model) {
+        if(book.getTitle().equals("") || book.getDescription().equals("") || book.getAuthors().size() == 0){
+            model.addAttribute("book", book);
+            return "editBook";
+        }
+        bookDao.updateBook(book);
+        return "redirect:/book/all";
+    }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String deleteGet(HttpServletRequest request, @PathVariable("id") Long id, Model model) {
+        model.addAttribute("book", bookDao.loadBookById(id));
+        String confirm = request.getParameter("confirm");
+        if(confirm != null) {
+            if(confirm.equals("Tak")){
+                bookDao.deleteBook(id);
+                return "redirect:/book/all";
+            } else {
+                return "redirect:/book/all";
+            }
+        }
+        return "confirm";
     }
 
     @RequestMapping("/all")
     @ResponseBody
     public String all() {
         List<Book> books = bookDao.getBooks();
-        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/book/add\" > Add </a> | <a href=\"http://localhost:8080/book/all\" > All </a></br>");
         for (Book book : books) {
-            result += book.getId() + " | " + book.getTitle() + " | ";
+            stringBuilder.append(book.getId() + " | " + book.getTitle() + " | ");
             List<Author> authors = book.getAuthors();
             for (Author author : authors) {
-                result += author.getFirstName() + " " + author.getLastName() + " | ";
+                stringBuilder.append(author.getFirstName() + " " + author.getLastName() + " | ");
             }
-            result += book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "</br>";
+            stringBuilder.append(book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "<a href=\"http://localhost:8080/book/edit/" + book.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/book/delete/" + book.getId() + "\" > Delete </a></br>");
         }
-        return result;
+        return stringBuilder.toString();
     }
 
     @RequestMapping("/rating/{rating}")

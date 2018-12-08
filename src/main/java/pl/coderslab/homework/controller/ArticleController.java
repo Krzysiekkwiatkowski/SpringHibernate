@@ -11,6 +11,7 @@ import pl.coderslab.homework.entity.Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.Date;
 import java.util.List;
 
 @RequestMapping("/article")
@@ -42,6 +43,10 @@ public class ArticleController {
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
     public String editPost(@ModelAttribute Article article){
         article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
+        Query query = entityManager.createQuery("SELECT a.created FROM Article a WHERE id = :id");
+        query.setParameter("id", article.getId());
+        Date date = (Date) query.getSingleResult();
+        article.setCreated(date);
         entityManager.merge(article);
         return "redirect:/article/all";
     }
