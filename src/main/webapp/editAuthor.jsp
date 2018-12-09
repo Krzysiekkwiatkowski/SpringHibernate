@@ -16,6 +16,8 @@
     <form:hidden path="id" />
     Firstname: <form:input path="firstName" /></br>
     Lastname: <form:input path="lastName" /></br>
+    Pesel: <form:input path="pesel" type="number"/></br>
+    Email: <form:input path="email" /></br>
     <input type="submit" value="Edit author">
 </form:form>
 </body>

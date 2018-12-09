@@ -1,6 +1,12 @@
 package pl.coderslab.entity;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -9,14 +15,22 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(min = 5)
     private String title;
     @ManyToMany(fetch = FetchType.EAGER)
+    @NotNull
     private List<Author> authors;
+    @Min(1)
+    @Max(10)
     private double rating;
     @ManyToOne
     @JoinColumn(name = "publisher_id")
+    @NotNull
     private Publisher publisher;
+    @Size(max = 600)
     private String description;
+    @Min(2)
+    private int pages;
 
     public Long getId() {
         return id;
@@ -64,5 +78,13 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
     }
 }

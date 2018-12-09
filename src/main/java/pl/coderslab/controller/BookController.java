@@ -15,7 +15,6 @@ import pl.coderslab.entity.Publisher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/book")

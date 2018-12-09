@@ -15,6 +15,8 @@
 <form:form method="post" modelAttribute="publisher">
     <form:hidden path="id" />
     Name: <form:input path="name" /></br>
+    Nip: <form:input path="nip" type="number"/></br>
+    Regon: <form:input path="regon" type="number"/></br>
     <input type="submit" value="Edit publisher">
 </form:form>
 </body>

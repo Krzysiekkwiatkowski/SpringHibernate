@@ -16,9 +16,10 @@
     <form:hidden path="id" />
     Title: <form:input path="title" /></br>
     Authors:<form:select itemValue="id" itemLabel="lastName" path="authors" items="${allAuthors}" /></br>
-    Rating: <form:input path="rating" type="number" min="0.0" step="0.1" max="10.0" /></br>
+    Rating: <form:input path="rating" type="number" min="1.0" step="0.1" max="10.0" /></br>
     Publisher: <form:select path="publisher.id" items="${publishers}" itemLabel="name" itemValue="id"/></br>
     Description: <form:input path="description" /></br>
+    Pages: <form:input path="pages" type="number" min="2" step="1"/></br>
     <button type="submit">Edit book</button>
 </form:form>
 </body>
