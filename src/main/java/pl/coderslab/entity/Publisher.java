@@ -15,9 +15,9 @@ public class Publisher {
     @NotBlank
     private String name;
     @NIP
-    private int nip;
+    private String nip;
     @REGON
-    private int regon;
+    private String regon;
 
     public Publisher() {
     }
@@ -38,19 +38,19 @@ public class Publisher {
         this.name = name;
     }
 
-    public int getNip() {
+    public String getNip() {
         return nip;
     }
 
-    public void setNip(int nip) {
+    public void setNip(String nip) {
         this.nip = nip;
     }
 
-    public int getRegon() {
+    public String getRegon() {
         return regon;
     }
 
-    public void setRegon(int regon) {
+    public void setRegon(String regon) {
         this.regon = regon;
     }
 }

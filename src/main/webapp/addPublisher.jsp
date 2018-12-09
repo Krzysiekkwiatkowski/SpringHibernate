@@ -13,9 +13,9 @@
 </head>
 <body>
 <form:form method="post" modelAttribute="publisher">
-    Name: <form:input path="name" /></br>
-    Nip: <form:input path="nip" type="number"/></br>
-    Regon: <form:input path="regon" type="number"/></br>
+    Name: <form:input path="name" /><form:errors path="name" cssClass="error" /></br>
+    Nip: <form:input path="nip" type="number"/><form:errors path="nip" cssClass="error" /></br>
+    Regon: <form:input path="regon" type="number"/><form:errors path="regon" cssClass="error" /></br>
     <input type="submit" value="Add publisher">
 </form:form>
 </body>

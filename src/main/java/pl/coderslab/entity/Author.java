@@ -16,8 +16,9 @@ public class Author {
     private String firstName;
     @NotBlank
     private String lastName;
+    private int yearOfBirth;
     @PESEL
-    private int pesel;
+    private String pesel;
     @Email
     private String email;
 
@@ -45,11 +46,19 @@ public class Author {
         this.lastName = lastName;
     }
 
-    public int getPesel() {
+    public int getYearOfBirth() {
+        return yearOfBirth;
+    }
+
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
+    }
+
+    public String getPesel() {
         return pesel;
     }
 
-    public void setPesel(int pesel) {
+    public void setPesel(String pesel) {
         this.pesel = pesel;
     }
 

@@ -37,11 +37,7 @@ public class BookController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@Valid @ModelAttribute Book book, BindingResult result) {
-        if (result.hasErrors()) {
-            List<ObjectError> allErrors = result.getAllErrors();
-            for (ObjectError allError : allErrors) {
-                System.out.println(allError.toString());
-            }
+        if(result.hasErrors()){
             return "addBook";
         }
         bookDao.saveBook(book);
@@ -62,9 +58,8 @@ public class BookController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Book book, Model model) {
-        if(book.getTitle().equals("") || book.getDescription().equals("") || book.getAuthors().size() == 0){
-            model.addAttribute("book", book);
+    public String editPost(@Valid @ModelAttribute Book book, BindingResult result) {
+        if(result.hasErrors()){
             return "editBook";
         }
         bookDao.updateBook(book);

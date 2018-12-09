@@ -14,10 +14,10 @@
 <body>
 <form:form method="post" modelAttribute="author">
     <form:hidden path="id" />
-    Firstname: <form:input path="firstName" /></br>
-    Lastname: <form:input path="lastName" /></br>
-    Pesel: <form:input path="pesel" type="number"/></br>
-    Email: <form:input path="email" /></br>
+    Firstname: <form:input path="firstName" /><form:errors path="firstName" cssClass="error" /></br>
+    Lastname: <form:input path="lastName" /><form:errors path="lastName" cssClass="error" /></br>
+    Pesel: <form:input path="pesel" type="number"/><form:errors path="pesel" cssClass="error" /></br>
+    Email: <form:input path="email" /><form:errors path="email" cssClass="error" /></br>
     <input type="submit" value="Edit author">
 </form:form>
 </body>

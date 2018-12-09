@@ -3,11 +3,13 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.entity.Author;
 
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/author")
@@ -23,7 +25,10 @@ public class AuthorController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@ModelAttribute Author author){
+    public String addPost(@Valid @ModelAttribute Author author, BindingResult result){
+        if(result.hasErrors()){
+            return "addAuthor";
+        }
         authorDao.saveAuthor(author);
         return "redirect:all";
     }
@@ -43,7 +48,10 @@ public class AuthorController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Author author){
+    public String editPost(@Valid @ModelAttribute Author author, BindingResult result){
+        if(result.hasErrors()){
+            return "editAuthor";
+        }
         authorDao.editAuthor(author);
         return "redirect:/author/all";
     }

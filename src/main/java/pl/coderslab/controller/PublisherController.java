@@ -3,10 +3,12 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Publisher;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/publisher")
@@ -22,7 +24,10 @@ public class PublisherController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@ModelAttribute Publisher publisher){
+    public String addPost(@Valid  @ModelAttribute Publisher publisher, BindingResult result){
+        if(result.hasErrors()){
+            return "addPublisher";
+        }
         publisherDao.savePublisher(publisher);
         return "redirect:all";
     }
@@ -42,7 +47,10 @@ public class PublisherController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Publisher publisher){
+    public String editPost(@Valid @ModelAttribute Publisher publisher, BindingResult result){
+        if(result.hasErrors()){
+            return "editPublisher";
+        }
         publisherDao.editPublisher(publisher);
         return "redirect:/publisher/all";
     }
