@@ -1,6 +1,9 @@
 package pl.coderslab.homework.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -11,13 +14,17 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     @Size(max = 200)
     private String title;
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private Creator creator;
     @ManyToMany(fetch = FetchType.EAGER)
+    @Size(min = 1)
     private List<Category> categories;
+    @NotBlank
+    @Size(min = 500)
     private String content;
     private Date created;
     private Date updated;

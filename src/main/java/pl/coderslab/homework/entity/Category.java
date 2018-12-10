@@ -1,6 +1,7 @@
 package pl.coderslab.homework.entity;
 
 import com.sun.istack.internal.Nullable;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,7 +13,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 5, max = 100)
     private String name;
     @Nullable
     private String description;

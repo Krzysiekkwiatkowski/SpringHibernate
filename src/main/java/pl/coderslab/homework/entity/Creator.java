@@ -1,5 +1,7 @@
 package pl.coderslab.homework.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +12,9 @@ public class Creator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
 
     public Creator() {
