@@ -1,36 +1,38 @@
 package pl.coderslab.entity;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
+import pl.coderslab.BookValidation;
+import pl.coderslab.PropositionValidation;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
 @Table(name = "books")
-public class Book {
+public class Book implements BookValidation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 5)
+    @Size(min = 5, groups = {PropositionValidation.class, BookValidation.class})
     private String title;
     @ManyToMany(fetch = FetchType.EAGER)
-    @NotNull
+    @Size(min = 1, groups = BookValidation.class)
     private List<Author> authors;
-    @Min(1)
-    @Max(10)
+    @Min(value = 1, groups = BookValidation.class)
+    @Max(value = 10, groups = BookValidation.class)
     private double rating;
     @ManyToOne
     @JoinColumn(name = "publisher_id")
-    @NotNull
+    @NotNull(groups = BookValidation.class)
     private Publisher publisher;
-    @Size(max = 600)
+    @Size(max = 600, groups = BookValidation.class)
+    @NotBlank(groups = PropositionValidation.class)
     private String description;
-    @Min(2)
+    @Min(value = 2, groups = BookValidation.class)
     private int pages;
+    @AssertTrue(groups = PropositionValidation.class)
+    private Boolean proposition;
 
     public Long getId() {
         return id;
@@ -86,5 +88,13 @@ public class Book {
 
     public void setPages(int pages) {
         this.pages = pages;
+    }
+
+    public Boolean getProposition() {
+        return proposition;
+    }
+
+    public void setProposition(Boolean proposition) {
+        this.proposition = proposition;
     }
 }

@@ -3,8 +3,10 @@ package pl.coderslab.entity;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.pl.PESEL;
+import pl.coderslab.IsAdult;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "authors")
@@ -16,6 +18,8 @@ public class Author {
     private String firstName;
     @NotBlank
     private String lastName;
+    @IsAdult
+    @NotNull
     private int yearOfBirth;
     @PESEL
     private String pesel;

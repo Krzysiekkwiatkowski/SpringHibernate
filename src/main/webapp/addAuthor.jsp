@@ -15,6 +15,7 @@
 <form:form method="post" modelAttribute="author">
     Firstname: <form:input path="firstName" /><form:errors path="firstName" cssClass="error" /></br>
     Lastname: <form:input path="lastName" /><form:errors path="lastName" cssClass="error" /></br>
+    Birth: <form:input path="yearOfBirth" /><form:errors path="yearOfBirth" cssClass="error" /></br>
     Pesel: <form:input path="pesel" type="number"/><form:errors path="pesel" cssClass="error" /></br>
     Email: <form:input path="email" /><form:errors path="email" cssClass="error" /></br>
     <input type="submit" value="Add author">

@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.BookValidation;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
@@ -14,7 +15,6 @@ import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/book")
@@ -36,9 +36,12 @@ public class BookController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute Book book, BindingResult result) {
+    public String add(@Validated({BookValidation.class}) @ModelAttribute Book book, BindingResult result) {
         if(result.hasErrors()){
             return "addBook";
+        }
+        if (book.getProposition() == null) {
+            book.setProposition(false);
         }
         bookDao.saveBook(book);
         return "redirect:all";
@@ -58,9 +61,12 @@ public class BookController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@Valid @ModelAttribute Book book, BindingResult result) {
+    public String editPost(@Validated({BookValidation.class}) @ModelAttribute Book book, BindingResult result) {
         if(result.hasErrors()){
             return "editBook";
+        }
+        if (book.getProposition() == null) {
+            book.setProposition(false);
         }
         bookDao.updateBook(book);
         return "redirect:/book/all";
