@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.ArticleGroupValidator;
+import pl.coderslab.DraftValidation;
 import pl.coderslab.homework.entity.Article;
 import pl.coderslab.homework.entity.Category;
 import pl.coderslab.homework.entity.Creator;
@@ -14,29 +14,26 @@ import pl.coderslab.homework.entity.Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.validation.groups.Default;
-import java.sql.Date;
 import java.util.List;
 
-@RequestMapping("/article")
+@RequestMapping("/draft")
 @Controller
 @Transactional
-public class ArticleController {
+public class DraftController {
     @PersistenceContext
     EntityManager entityManager;
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addGet(Model model){
         model.addAttribute("article", new Article());
-        return "addArticle";
+        return "addDraft";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@Validated({ArticleGroupValidator.class, Default.class}) @ModelAttribute Article article, BindingResult result){
+    public String addPost(@Validated({DraftValidation.class}) @ModelAttribute Article article, BindingResult result){
         if(result.hasErrors()){
-            return "addArticle";
+            return "addDraft";
         }
-        article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
         entityManager.persist(article);
         return "redirect:all";
     }
@@ -44,48 +41,43 @@ public class ArticleController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editGet(@PathVariable("id") Long id, Model model){
         model.addAttribute("article", entityManager.find(Article.class, id));
-        return "editArticle";
+        return "editDraft";
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@Validated({ArticleGroupValidator.class, Default.class}) @ModelAttribute Article article, BindingResult result){
+    public String editPost(@Validated({DraftValidation.class}) @ModelAttribute Article article, BindingResult result){
         if(result.hasErrors()){
-            return "editArticle";
+            return "editDraft";
         }
-        article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
-        Query query = entityManager.createQuery("SELECT a.created FROM Article a WHERE id = :id");
-        query.setParameter("id", article.getId());
-        Date date = (Date) query.getSingleResult();
-        article.setCreated(date);
         entityManager.merge(article);
-        return "redirect:/article/all";
+        return "redirect:/draft/all";
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id){
         Article article = entityManager.find(Article.class, id);
         entityManager.remove(entityManager.contains(article) ? article : entityManager.merge(article));
-        return "redirect:/article/all";
+        return "redirect:/draft/all";
     }
 
     @RequestMapping("/all")
     @ResponseBody
     public String all(){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<a href=\"http://localhost:8080/article/add\"> Add </a> | <a href=\"http://localhost:8080/article/all\" > All </a></br>");
-        for (Article article : getAllArticles()) {
+        stringBuilder.append("<a href=\"http://localhost:8080/draft/add\"> Add </a> | <a href=\"http://localhost:8080/draft/all\" > All </a></br>");
+        for (Article article : getAllDrafts()) {
             String categories = "";
             for (Category category : article.getCategories()) {
                 categories += category.getName() + " ";
             }
-            stringBuilder.append(article.getId() + " | " + article.getTitle() + " | " + article.getCreator().getFirstName() + " " + article.getCreator().getLastName() + " | " + categories + " | " + article.getContent() + " | " + article.getCreated() + " | " + article.getUpdated() + "<a href=\"http://localhost:8080/article/edit/" + article.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/article/delete/" + article.getId() + "\" > Delete </a></br>");
+            stringBuilder.append(article.getId() + " | " + article.getTitle() + " | " + article.getCreator().getFirstName() + " " + article.getCreator().getLastName() + " | " + categories + " | " + article.getContent() + " | " + article.getCreated() + " | " + article.getUpdated() + "<a href=\"http://localhost:8080/draft/edit/" + article.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/draft/delete/" + article.getId() + "\" > Delete </a></br>");
         }
         return stringBuilder.toString();
     }
 
-    @ModelAttribute("articles")
-    public List<Article> getAllArticles(){
-        Query query = entityManager.createQuery("SELECT a FROM Article a");
+    @ModelAttribute("categoryList")
+    public List<Category> getAllCategories(){
+        Query query = entityManager.createQuery("SELECT c FROM Category c");
         return query.getResultList();
     }
 
@@ -95,9 +87,9 @@ public class ArticleController {
         return query.getResultList();
     }
 
-    @ModelAttribute("categoryList")
-    public List<Category> getAllCategories(){
-        Query query = entityManager.createQuery("SELECT c FROM Category c");
+    @ModelAttribute("all")
+    public List<Article> getAllDrafts(){
+        Query query = entityManager.createQuery("SELECT a FROM Article a WHERE draft = 1");
         return query.getResultList();
     }
 }
