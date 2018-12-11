@@ -3,12 +3,14 @@ package pl.coderslab.homework.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.homework.entity.Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/creator")
@@ -25,7 +27,10 @@ public class CreatorController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@ModelAttribute Creator creator){
+    public String addPost(@Valid @ModelAttribute Creator creator, BindingResult result){
+        if(result.hasErrors()){
+            return "addCreator";
+        }
         entityManager.persist(creator);
         return "redirect:all";
     }
@@ -37,7 +42,10 @@ public class CreatorController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Creator creator){
+    public String editPost(@Valid @ModelAttribute Creator creator, BindingResult result){
+        if(result.hasErrors()){
+            return "editCreator";
+        }
         entityManager.merge(creator);
         return "redirect:/creator/all";
     }

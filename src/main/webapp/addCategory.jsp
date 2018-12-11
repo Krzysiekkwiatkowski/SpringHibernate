@@ -13,8 +13,8 @@
 </head>
 <body>
 <form:form method="post" modelAttribute="category">
-    Name: <form:input path="name"/></br>
-    Description: <form:input path="description" /></br>
+    Name: <form:input path="name"/><form:errors path="name" cssClass="error" /></br>
+    Description: <form:input path="description" /><form:errors path="description" cssClass="error" /></br>
     <input type="submit" value="Add category">
 </form:form>
 </body>

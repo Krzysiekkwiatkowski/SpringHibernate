@@ -13,8 +13,8 @@
 </head>
 <body>
 <form:form method="post" modelAttribute="creator">
-    Firstname: <form:input path="firstName" /></br>
-    Lastname: <form:input path="lastName" /></br>
+    Firstname: <form:input path="firstName" /><form:errors path="firstName" cssClass="error" /></br>
+    Lastname: <form:input path="lastName" /><form:errors path="lastName" cssClass="error" /></br>
     <input type="submit" value="Add creator">
 </form:form>
 </body>

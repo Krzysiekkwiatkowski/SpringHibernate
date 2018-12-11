@@ -3,12 +3,14 @@ package pl.coderslab.homework.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.homework.entity.Category;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/category")
@@ -25,7 +27,10 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@ModelAttribute Category category){
+    public String addPost(@Valid @ModelAttribute Category category, BindingResult result){
+        if(result.hasErrors()){
+            return "addCategory";
+        }
         entityManager.persist(category);
         return "redirect:all";
     }
@@ -44,7 +49,10 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Category category){
+    public String editPost(@Valid @ModelAttribute Category category, BindingResult result){
+        if(result.hasErrors()){
+            return "editCategory";
+        }
         entityManager.merge(category);
         return "redirect:/category/all";
     }

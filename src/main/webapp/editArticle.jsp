@@ -14,10 +14,10 @@
 <body>
 <form:form method="post" modelAttribute="article">
     <form:hidden path="id" />
-    Title: <form:input path="title" /></br>
-    Creator: <form:select path="creator.id" items="${creators}" itemLabel="lastName" itemValue="id" /></br>
-    Categories: <form:select path="categories" items="${categoryList}" itemLabel="name" itemValue="id" /></br>
-    Content: <form:input path="content" /></br>
+    Title: <form:input path="title" /><form:errors path="title" cssClass="error" /></br>
+    Creator: <form:select path="creator.id" items="${creators}" itemLabel="lastName" itemValue="id" /><form:errors path="creator" cssClass="error" /></br>
+    Categories: <form:select path="categories" items="${categoryList}" itemLabel="name" itemValue="id" /><form:errors path="categories" cssClass="error" /></br>
+    Content: <form:input path="content" /><form:errors path="content" cssClass="error" /></br>
     <input type="submit" value="Edit article">
 </form:form>
 </body>

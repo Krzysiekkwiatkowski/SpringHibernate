@@ -3,7 +3,10 @@ package pl.coderslab.homework.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.ArticleGroupValidator;
 import pl.coderslab.homework.entity.Article;
 import pl.coderslab.homework.entity.Category;
 import pl.coderslab.homework.entity.Creator;
@@ -28,7 +31,10 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addPost(@ModelAttribute Article article){
+    public String addPost(@Validated({ArticleGroupValidator.class}) @ModelAttribute Article article, BindingResult result){
+        if(result.hasErrors()){
+            return "addArticle";
+        }
         article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
         entityManager.persist(article);
         return "redirect:all";
@@ -41,7 +47,10 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/edit/*", method = RequestMethod.POST)
-    public String editPost(@ModelAttribute Article article){
+    public String editPost(@Validated({ArticleGroupValidator.class}) @ModelAttribute Article article, BindingResult result){
+        if(result.hasErrors()){
+            return "editArticle";
+        }
         article.setCreator(entityManager.find(Creator.class, article.getCreator().getId()));
         Query query = entityManager.createQuery("SELECT a.created FROM Article a WHERE id = :id");
         query.setParameter("id", article.getId());

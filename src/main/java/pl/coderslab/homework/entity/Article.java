@@ -1,9 +1,10 @@
 package pl.coderslab.homework.entity;
 
 import org.hibernate.validator.constraints.NotBlank;
+import pl.coderslab.ArticleGroupValidator;
+import pl.coderslab.CategorySize;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -21,10 +22,10 @@ public class Article {
     @JoinColumn(name = "creator_id")
     private Creator creator;
     @ManyToMany(fetch = FetchType.EAGER)
-    @Size(min = 1)
+    @CategorySize(min = 2, max = 5, groups = ArticleGroupValidator.class)
     private List<Category> categories;
     @NotBlank
-    @Size(min = 500)
+    @Size(min = 5)
     private String content;
     private Date created;
     private Date updated;
