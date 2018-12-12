@@ -19,6 +19,7 @@
     Publisher: <form:select path="publisher.id" items="${publishers}" itemLabel="name" itemValue="id"/><form:errors path="publisher" cssClass="error" /></br>
     Description: <form:input path="description" /><form:errors path="description" cssClass="error" /></br>
     Pages: <form:input path="pages" type="number"/><form:errors path="pages" cssClass="error" /></br>
+    Category: <form:select path="category.id" items="${categories}" itemLabel="name" itemValue="id" /><form:errors path="category" cssClass="error" /></br>
     <button type="submit">Add book</button>
 </form:form>
 </body>

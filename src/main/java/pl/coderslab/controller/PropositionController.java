@@ -12,6 +12,7 @@ import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
+import pl.coderslab.entity.Category;
 import pl.coderslab.entity.Publisher;
 
 import javax.persistence.EntityManager;
@@ -79,7 +80,7 @@ public class PropositionController {
             for (Author author : authors) {
                 stringBuilder.append(author.getFirstName() + " " + author.getLastName() + " | ");
             }
-            stringBuilder.append(book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getDescription() + "</br>");
+            stringBuilder.append(book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getCategory().getName() + " | " + book.getDescription() + "</br>");
         }
         return stringBuilder.toString();
     }
@@ -98,5 +99,11 @@ public class PropositionController {
     @ModelAttribute("publishers")
     public List<Publisher> getPublishers() {
         return publisherDao.getPublishers();
+    }
+
+    @ModelAttribute("categories")
+    public List<Category> getCategories(){
+        Query query = entityManager.createQuery("SELECT c FROM Category c");
+        return query.getResultList();
     }
 }

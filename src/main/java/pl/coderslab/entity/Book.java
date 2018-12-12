@@ -31,6 +31,10 @@ public class Book implements BookValidation {
     private String description;
     @Min(value = 2, groups = BookValidation.class)
     private int pages;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @NotNull(groups = BookValidation.class)
+    private Category category;
     @AssertTrue(groups = PropositionValidation.class)
     private Boolean proposition;
 
@@ -88,6 +92,14 @@ public class Book implements BookValidation {
 
     public void setPages(int pages) {
         this.pages = pages;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Boolean getProposition() {

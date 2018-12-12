@@ -20,6 +20,7 @@
     Publisher: <form:select path="publisher.id" items="${publishers}" itemLabel="name" itemValue="id"/></br>
     Description: <form:input path="description" /><form:errors path="description" cssClass="error" /></br>
     Pages: <form:input path="pages" type="number" /></br>
+    Category: <form:select path="category.id" items="${categories}" itemLabel="name" itemValue="id" /><form:errors path="category" cssClass="error" /></br>
     Proposition: <form:checkbox path="proposition" /><form:errors path="proposition" cssClass="error" /></br>
     <button type="submit">Edit proposition</button>
 </form:form>
