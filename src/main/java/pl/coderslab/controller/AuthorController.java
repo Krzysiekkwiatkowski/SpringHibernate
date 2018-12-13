@@ -88,20 +88,44 @@ public class AuthorController {
         return stringBuilder.toString();
     }
 
-    @RequestMapping("/pesel/{pesel}")
-    @ResponseBody
-    public String byPesel(@PathVariable("pesel") String pesel){
-        Author author = authorRepository.findByPesel(pesel);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
-        stringBuilder.append(author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + " | " + author.getEmail() + " | " + author.getPesel() + "<a href=\"http://localhost:8080/author/edit/" + author.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/author/delete/" + author.getId() + "\" > Delete </a>" + "</br>");
-        return stringBuilder.toString();
-    }
+//    @RequestMapping("/pesel/{pesel}")
+//    @ResponseBody
+//    public String byPesel(@PathVariable("pesel") String pesel){
+//        Author author = authorRepository.findByPesel(pesel);
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
+//        stringBuilder.append(author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + " | " + author.getEmail() + " | " + author.getPesel() + "<a href=\"http://localhost:8080/author/edit/" + author.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/author/delete/" + author.getId() + "\" > Delete </a>" + "</br>");
+//        return stringBuilder.toString();
+//    }
 
     @RequestMapping("/lastName/{lastName}")
     @ResponseBody
     public String byLastName(@PathVariable("lastName") String lastName){
         List<Author> authors = authorRepository.findByLastName(lastName);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
+        for (Author author : authors) {
+            stringBuilder.append(author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + " | " + author.getEmail() + " | " + author.getPesel() + "<a href=\"http://localhost:8080/author/edit/" + author.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/author/delete/" + author.getId() + "\" > Delete </a>" + "</br>");
+        }
+        return stringBuilder.toString();
+    }
+
+    @RequestMapping("/emailike/{email}")
+    @ResponseBody
+    public String byEmailLike(@PathVariable("email") String email){
+        List<Author> authors = authorRepository.findByEmail(email);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
+        for (Author author : authors) {
+            stringBuilder.append(author.getId() + " | " + author.getFirstName() + " | " + author.getLastName() + " | " + author.getEmail() + " | " + author.getPesel() + "<a href=\"http://localhost:8080/author/edit/" + author.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/author/delete/" + author.getId() + "\" > Delete </a>" + "</br>");
+        }
+        return stringBuilder.toString();
+    }
+
+    @RequestMapping("/peselike/{pesel}")
+    @ResponseBody
+    public String byPeselLike(@PathVariable("pesel") String pesel){
+        List<Author> authors = authorRepository.findByPesel(pesel);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<a href=\"http://localhost:8080/author/add\" > Add </a> | <a href=\"http://localhost:8080/author/all\" > All </a></br>");
         for (Author author : authors) {

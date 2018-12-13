@@ -242,6 +242,29 @@ public class BookController {
         return stringBuilder.toString();
     }
 
+    @RequestMapping("/btwrat/{min}/{max}")
+    @ResponseBody
+    public String byBeetwenRating(@PathVariable("min") double min, @PathVariable("max") double max) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/book/add\" > Add </a> | <a href=\"http://localhost:8080/book/all\" > All </a></br>");
+        for (Book book : bookRepository.findByRatingBetween(min, max)) {
+            stringBuilder.append(book.getId() + " | " + book.getTitle() + " | ");
+            List<Author> authors = book.getAuthors();
+            for (Author author : authors) {
+                stringBuilder.append(author.getFirstName() + " " + author.getLastName() + " | ");
+            }
+            stringBuilder.append(book.getPublisher().getName() + " | " + book.getRating() + " | " + book.getCategory().getName() + " | " + book.getDescription() + "<a href=\"http://localhost:8080/book/edit/" + book.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/book/delete/" + book.getId() + "\" > Delete </a></br>");
+        }
+        return stringBuilder.toString();
+    }
+
+    @RequestMapping("/setrating/{rating}")
+    @ResponseBody
+    public String setRating(@PathVariable("rating") double rating) {
+        bookRepository.resetRating(rating);
+        return "Rating został zmieniony";
+    }
+
     @ModelAttribute("allAuthors")
     public List<Author> getAuthors() {
         return authorDao.getAuthors();
