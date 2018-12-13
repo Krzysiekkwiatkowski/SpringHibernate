@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.repository.PublisherRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
 public class PublisherController {
     @Autowired
     private PublisherDao publisherDao;
+
+    @Autowired
+    PublisherRepository publisherRepository;
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addGet(Model model){
@@ -68,8 +72,28 @@ public class PublisherController {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<a href=\"http://localhost:8080/publisher/add\" > Add </a> | <a href=\"http://localhost:8080/publisher/all\" > All </a></br>\n");
         for (Publisher publisher : publishers) {
-            stringBuilder.append(publisher.getId() + " | " + publisher.getName() + "<a href=\"http://localhost:8080/publisher/edit/" + publisher.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/publisher/delete/" + publisher.getId() + "\" > Delete </a>\n</br>");
+            stringBuilder.append(publisher.getId() + " | " + publisher.getName() + " | " + publisher.getNip() + " | " + publisher.getRegon() + "<a href=\"http://localhost:8080/publisher/edit/" + publisher.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/publisher/delete/" + publisher.getId() + "\" > Delete </a>\n</br>");
         }
+        return stringBuilder.toString();
+    }
+
+    @RequestMapping("/nip/{nip}")
+    @ResponseBody
+    public String byNip(@PathVariable("nip") String nip){
+        Publisher publisher = publisherRepository.findByNip(nip);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/publisher/add\" > Add </a> | <a href=\"http://localhost:8080/publisher/all\" > All </a></br>\n");
+        stringBuilder.append(publisher.getId() + " | " + publisher.getName() + " | " + publisher.getNip() + " | " + publisher.getRegon() + "<a href=\"http://localhost:8080/publisher/edit/" + publisher.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/publisher/delete/" + publisher.getId() + "\" > Delete </a>\n</br>");
+        return stringBuilder.toString();
+    }
+
+    @RequestMapping("/regon/{regon}")
+    @ResponseBody
+    public String byRegon(@PathVariable("regon") String regon){
+        Publisher publisher = publisherRepository.findByRegon(regon);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<a href=\"http://localhost:8080/publisher/add\" > Add </a> | <a href=\"http://localhost:8080/publisher/all\" > All </a></br>\n");
+        stringBuilder.append(publisher.getId() + " | " + publisher.getName() + " | " + publisher.getNip() + " | " + publisher.getRegon() + "<a href=\"http://localhost:8080/publisher/edit/" + publisher.getId() + "\" > Edit </a> | <a href=\"http://localhost:8080/publisher/delete/" + publisher.getId() + "\" > Delete </a>\n</br>");
         return stringBuilder.toString();
     }
 }
