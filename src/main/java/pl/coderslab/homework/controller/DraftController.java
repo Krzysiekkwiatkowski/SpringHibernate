@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.DraftValidation;
 import pl.coderslab.homework.entity.Article;
-import pl.coderslab.homework.entity.Category;
+import pl.coderslab.homework.entity.Subcategory;
 import pl.coderslab.homework.entity.Creator;
 
 import javax.persistence.EntityManager;
@@ -67,8 +67,8 @@ public class DraftController {
         stringBuilder.append("<a href=\"http://localhost:8080/draft/add\"> Add </a> | <a href=\"http://localhost:8080/draft/all\" > All </a></br>");
         for (Article article : getAllDrafts()) {
             String categories = "";
-            for (Category category : article.getCategories()) {
-                categories += category.getName() + " ";
+            for (Subcategory subcategory : article.getSubcategories()) {
+                categories += subcategory.getName() + " ";
             }
             stringBuilder.append(article.getId() + " | " + article.getTitle() + " | " + article.getCreator().getFirstName() + " " + article.getCreator().getLastName() + " | " + categories + " | " + article.getContent() + " | " + article.getCreated() + " | " + article.getUpdated() + "<a href=\"http://localhost:8080/draft/edit/" + article.getId() + "\"> Edit </a> | <a href=\"http://localhost:8080/draft/delete/" + article.getId() + "\" > Delete </a></br>");
         }
@@ -76,7 +76,7 @@ public class DraftController {
     }
 
     @ModelAttribute("categoryList")
-    public List<Category> getAllCategories(){
+    public List<Subcategory> getAllSubcategories(){
         Query query = entityManager.createQuery("SELECT c FROM Category c");
         return query.getResultList();
     }

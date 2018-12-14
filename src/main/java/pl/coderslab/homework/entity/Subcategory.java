@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Category {
+public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,10 +18,10 @@ public class Category {
     private String name;
     @Nullable
     private String description;
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "subcategories")
     private List<Article> articles = new ArrayList<>();
 
-    public Category() {
+    public Subcategory() {
     }
 
     public Long getId() {

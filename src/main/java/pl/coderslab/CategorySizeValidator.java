@@ -1,12 +1,12 @@
 package pl.coderslab;
 
-import pl.coderslab.homework.entity.Category;
+import pl.coderslab.homework.entity.Subcategory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class CategorySizeValidator implements ConstraintValidator<CategorySize, List<Category>> {
+public class CategorySizeValidator implements ConstraintValidator<CategorySize, List<Subcategory>> {
     private int min;
     private int max;
 
@@ -17,7 +17,7 @@ public class CategorySizeValidator implements ConstraintValidator<CategorySize, 
     }
 
     @Override
-    public boolean isValid(List<Category> categories, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(List<Subcategory> categories, ConstraintValidatorContext constraintValidatorContext) {
         return categories.size() >= min && categories.size() <= max;
     }
 }

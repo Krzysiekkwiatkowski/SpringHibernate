@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.homework.entity.Article;
-import pl.coderslab.homework.entity.Category;
+import pl.coderslab.homework.entity.Subcategory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,7 +34,7 @@ public class HomePageController {
             }
         }
         Query queryCategory = entityManager.createQuery("SELECT c FROM Category c");
-        List<Category> categories = queryCategory.getResultList();
+        List<Subcategory> categories = queryCategory.getResultList();
         model.addAttribute("articles", articles);
         model.addAttribute("categories", categories);
         return "home";
@@ -43,7 +43,7 @@ public class HomePageController {
     @RequestMapping("/category/{id}")
     @ResponseBody
     public String articles(@PathVariable("id") Long id){
-        Query query = entityManager.createQuery("SELECT a FROM Article a WHERE a.category.id=:id");
+        Query query = entityManager.createQuery("SELECT a FROM Article a WHERE a.subcategory.id=:id");
         query.setParameter("id", id);
         List<Article> articles = query.getResultList();
         StringBuilder stringBuilder = new StringBuilder();

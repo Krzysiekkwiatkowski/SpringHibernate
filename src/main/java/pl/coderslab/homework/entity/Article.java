@@ -26,7 +26,7 @@ public class Article {
     private Creator creator;
     @ManyToMany(fetch = FetchType.EAGER)
     @CategorySize(min = 2, max = 5, groups = ArticleGroupValidator.class)
-    private List<Category> categories;
+    private List<Subcategory> subcategories;
     @NotBlank(groups = Default.class)
     @Size(min = 5, groups = {DraftValidation.class, Default.class})
     private String content;
@@ -66,12 +66,12 @@ public class Article {
         this.updated = Date.valueOf(LocalDate.now());
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public List<Subcategory> getSubcategories() {
+        return subcategories;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setSubcategories(List<Subcategory> subcategories) {
+        this.subcategories = subcategories;
     }
 
     public String getContent() {

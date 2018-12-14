@@ -1,15 +1,15 @@
 package pl.coderslab.homework.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.homework.entity.Creator;
+import pl.coderslab.homework.repository.CreatorRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -17,8 +17,8 @@ import java.util.List;
 @Controller
 @Transactional
 public class CreatorController {
-    @PersistenceContext
-    EntityManager entityManager;
+    @Autowired
+    CreatorRepository creatorRepository;
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addGet(Model model){
@@ -31,13 +31,13 @@ public class CreatorController {
         if(result.hasErrors()){
             return "addCreator";
         }
-        entityManager.persist(creator);
+        creatorRepository.save(creator);
         return "redirect:all";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editGet(@PathVariable("id") Long id, Model model){
-        model.addAttribute("creator", entityManager.find(Creator.class, id));
+        model.addAttribute("creator", creatorRepository.findOne(id));
         return "editCreator";
     }
 
@@ -46,14 +46,14 @@ public class CreatorController {
         if(result.hasErrors()){
             return "editCreator";
         }
-        entityManager.merge(creator);
+        creatorRepository.save(creator);
         return "redirect:/creator/all";
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id){
-        Creator creator = entityManager.find(Creator.class, id);
-        entityManager.remove(entityManager.contains(creator) ? creator : entityManager.merge(creator));
+        Creator creator = creatorRepository.findOne(id);
+        creatorRepository.delete(creatorRepository.exists(Example.of(creator)) ? creator : creatorRepository.save(creator));
         return "redirect:/creator/all";
     }
 
@@ -70,7 +70,6 @@ public class CreatorController {
 
     @RequestMapping("creators")
     public List<Creator> getAllCreators(){
-        Query query = entityManager.createQuery("SELECT c FROM Creator c");
-        return query.getResultList();
+        return creatorRepository.findAll();
     }
 }
